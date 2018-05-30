@@ -7,6 +7,7 @@ import com.tngtech.archunit.lang.ArchRule;
 import org.junit.runner.RunWith;
 
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
+import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 
 @RunWith(ArchUnitRunner.class)
 @AnalyzeClasses(packagesOf = Application.class)
@@ -23,4 +24,9 @@ public class ArchitectureTest {
             .whereLayer("service").mayOnlyBeAccessedByLayers("boundary")
             .whereLayer("repository").mayOnlyBeAccessedByLayers("boundary", "service")
             .whereLayer("entity").mayOnlyBeAccessedByLayers("boundary", "service");
+
+    @ArchTest
+    public static final ArchRule cycleRule = slices()
+            .matching("ch.martinelli.(*)..")
+            .should().beFreeOfCycles();
 }

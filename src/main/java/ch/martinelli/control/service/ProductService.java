@@ -10,12 +10,9 @@ import java.util.List;
 @Service
 public class ProductService {
 
-    private final CheckController checkController;
-
     private final ProductRepository productRepository;
 
     public ProductService(CheckController checkController, ProductRepository productRepository) {
-        this.checkController = checkController;
         this.productRepository = productRepository;
     }
 
