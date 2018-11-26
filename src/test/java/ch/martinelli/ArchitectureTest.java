@@ -15,15 +15,15 @@ public class ArchitectureTest {
 
     @ArchTest
     public static final ArchRule layerRule = layeredArchitecture()
-            .layer("boundary").definedBy("..boundary..")
-            .layer("service").definedBy("..control.service..")
-            .layer("repository").definedBy("..control.repository..")
+            .layer("api").definedBy("..api..")
+            .layer("service").definedBy("..service..")
+            .layer("repository").definedBy("..repository..")
             .layer("entity").definedBy("..entity..")
 
-            .whereLayer("boundary").mayNotBeAccessedByAnyLayer()
-            .whereLayer("service").mayOnlyBeAccessedByLayers("boundary")
-            .whereLayer("repository").mayOnlyBeAccessedByLayers("boundary", "service")
-            .whereLayer("entity").mayOnlyBeAccessedByLayers("boundary", "service");
+            .whereLayer("api").mayNotBeAccessedByAnyLayer()
+            .whereLayer("service").mayOnlyBeAccessedByLayers("api")
+            .whereLayer("repository").mayOnlyBeAccessedByLayers("api", "service")
+            .whereLayer("entity").mayOnlyBeAccessedByLayers("api", "service", "repository");
 
     @ArchTest
     public static final ArchRule cycleRule = slices()

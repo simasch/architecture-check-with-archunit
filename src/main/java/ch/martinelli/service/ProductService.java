@@ -1,8 +1,7 @@
-package ch.martinelli.control.service;
+package ch.martinelli.service;
 
 import ch.martinelli.entity.Product;
-import ch.martinelli.boundary.CheckController;
-import ch.martinelli.control.repository.ProductRepository;
+import ch.martinelli.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +11,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public ProductService(CheckController checkController, ProductRepository productRepository) {
+    public ProductService(ProductRepository productRepository) {
         this.productRepository = productRepository;
     }
 

@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class VisualizeTest {
 
-    JavaClasses classes = new ClassFileImporter().importPackages("ch.martinelli.boundary", "ch.martinelli.control", "ch.martinelli.entity");
+    JavaClasses classes = new ClassFileImporter().importPackages("ch.martinelli.api", "ch.martinelli.control", "ch.martinelli.entity");
 
     @Test
     public void draw() {
