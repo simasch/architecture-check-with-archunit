@@ -1,32 +1,39 @@
 package ch.martinelli;
 
-import com.tngtech.archunit.junit.AnalyzeClasses;
-import com.tngtech.archunit.junit.ArchTest;
-import com.tngtech.archunit.junit.ArchUnitRunner;
+import com.tngtech.archunit.core.domain.JavaClasses;
+import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.lang.ArchRule;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
 
 import static com.tngtech.archunit.library.Architectures.layeredArchitecture;
 import static com.tngtech.archunit.library.dependencies.SlicesRuleDefinition.slices;
 
-@RunWith(ArchUnitRunner.class)
-@AnalyzeClasses(packagesOf = Application.class)
 public class ArchitectureTest {
 
-    @ArchTest
-    public static final ArchRule layerRule = layeredArchitecture()
-            .layer("api").definedBy("..api..")
-            .layer("service").definedBy("..service..")
-            .layer("repository").definedBy("..repository..")
-            .layer("entity").definedBy("..entity..")
+    JavaClasses importedClasses = new ClassFileImporter().importPackages("ch.martinelli");
 
-            .whereLayer("api").mayNotBeAccessedByAnyLayer()
-            .whereLayer("service").mayOnlyBeAccessedByLayers("api")
-            .whereLayer("repository").mayOnlyBeAccessedByLayers("api", "service")
-            .whereLayer("entity").mayOnlyBeAccessedByLayers("api", "service", "repository");
+    @Test
+    public void layering() {
+        ArchRule layerRule = layeredArchitecture()
+                .layer("api").definedBy("..api..")
+                .layer("service").definedBy("..service..")
+                .layer("repository").definedBy("..repository..")
+                .layer("entity").definedBy("..entity..")
 
-    @ArchTest
-    public static final ArchRule cycleRule = slices()
-            .matching("ch.martinelli.(*)..")
-            .should().beFreeOfCycles();
+                .whereLayer("api").mayNotBeAccessedByAnyLayer()
+                .whereLayer("service").mayOnlyBeAccessedByLayers("api")
+                .whereLayer("repository").mayOnlyBeAccessedByLayers("api", "service")
+                .whereLayer("entity").mayOnlyBeAccessedByLayers("api", "service", "repository");
+
+        layerRule.check(importedClasses);
+    }
+
+    @Test
+    public void cylces() {
+        ArchRule cycleRule = slices()
+                .matching("ch.martinelli.(*)..")
+                .should().beFreeOfCycles();
+
+        cycleRule.check(importedClasses);
+    }
 }
